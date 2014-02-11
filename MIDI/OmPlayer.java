@@ -1,0 +1,199 @@
+package midi;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.sound.midi.ControllerEventListener;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.MetaMessage;
+import javax.sound.midi.MetaEventListener;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.Synthesizer;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Transmitter;
+
+
+
+class OmPlayer implements MetaEventListener {
+	public static final int END_OF_TRACK_MESSAGE = 47;
+	public Sequencer sequencer;
+	public boolean loop;
+	public boolean paused;
+	public static boolean		DEBUG = false;
+	public static Sequencer	sm_sequencer = null;
+	public static List		sm_openedMidiDeviceList;
+	public static boolean sm_bFinished = false;
+	public static final int DRUM_TRACK = 1;
+	public boolean stopped;
+	public String name;
+
+
+	public OmPlayer() {
+		name = "player";
+		try {
+			sequencer = MidiSystem.getSequencer();
+			sequencer.open();
+			sequencer.addMetaEventListener(this);
+		} catch (MidiUnavailableException ex) {
+			sequencer = null;
+		}
+		System.out.println(sequencer);
+	}
+
+	public void meta(MetaMessage event) {
+		if (event.getType() == END_OF_TRACK_MESSAGE) {
+			if (sequencer != null && sequencer.isOpen() && loop) {
+				sequencer.start();
+			}
+		}
+	}
+
+
+	/**
+	 * Loads a sequence from the file system. Returns null if an error occurs.
+	 */
+	public Sequence getSequence(String filename) {
+		try {
+			return getSequence(new FileInputStream(filename));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Loads a sequence from an input stream. Returns null if an error occurs.
+	 */
+	public Sequence getSequence(InputStream is) {
+		try {
+			if (!is.markSupported()) {
+				is = new BufferedInputStream(is);
+			}
+			Sequence s = MidiSystem.getSequence(is);
+			is.close();
+			return s;
+		} catch (InvalidMidiDataException ex) {
+			ex.printStackTrace();
+			return null;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Plays a sequence, optionally looping. This method returns immediately.
+	 * The sequence is not played if it is invalid.
+	 */
+	public void play(Sequence sequence, boolean loop) {
+		if (sequencer != null && sequence != null && sequencer.isOpen()) {
+			try {
+				sequencer.setSequence(sequence);
+				sequencer.start();stopped = false;
+				this.loop = loop;
+			} catch (InvalidMidiDataException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * This method is called by the sound system when a meta event occurs. In
+	 * this case, when the end-of-track meta event is received, the sequence is
+	 * restarted if looping is on.
+	 */
+
+
+	/**
+	 * Stops the sequencer and resets its position to 0.
+	 */
+	public void stop() {
+		if (sequencer != null && sequencer.isOpen()) {
+			sequencer.stop();stopped=true;
+			sequencer.setMicrosecondPosition(0);
+		}
+	}
+
+	/**
+	 * Closes the sequencer.
+	 */
+	public void close() {
+		if (sequencer != null && sequencer.isOpen()) {
+			sequencer.close();
+		}
+	}
+
+	/**
+	 * Gets the sequencer.
+	 */
+	public Sequencer getSequencer() {
+		return sequencer;
+	}
+
+	/**
+	 * Sets the paused state. Music may not immediately pause.
+	 */
+	public void setPaused(boolean paused) {
+		if (this.paused != paused && sequencer != null && sequencer.isOpen()) {
+			this.paused = paused;
+			if (paused) {
+				sequencer.stop();
+			} else {
+				sequencer.start();
+			}
+		}
+	}
+
+	/**
+	 * Returns the paused state.
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+
+
+	public void omMidiRecordPlayer(OmPlayer play,int track){
+		boolean ko = true;
+		while(ko){
+
+			if(play.getSequencer().getSequence().getTracks()[track]!=null){
+				play.getSequencer().recordEnable(play.getSequencer().getSequence().getTracks()[track], -1);ko=false;
+			}else{
+
+				play.getSequencer().getSequence().createTrack();
+
+			}
+		}
+	}
+
+	public int omMidiGetTime(){
+
+		return (int) this.getSequencer().getMicrosecondPosition();
+
+	}
+
+
+
+	public void omMidiSetLoopPlayer(OmPlayer play,int start ,int end){
+		play.getSequencer().stop();play.stopped=true;
+		play.getSequencer().setTickPosition(start);
+		play.getSequencer().setLoopStartPoint(start);
+		play.getSequencer().setLoopEndPoint(end);
+		play.getSequencer().setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+		play.getSequencer().start();
+		play.stopped=false;
+
+	}
+
+}
