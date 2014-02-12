@@ -6,7 +6,8 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		SdifWrapper wrap = new SdifWrapper();
-		System.out.println("coucou");
+		wrap.SdifInit("SdifTypes.STYP");
+		wrap.sdifOpenFile("orgue.sdif", 1);
 	}
 
 }

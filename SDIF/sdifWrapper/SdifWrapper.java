@@ -12,16 +12,31 @@ import com.sun.jna.platform.win32.BaseTSD.SIZE_T;
 public class SdifWrapper {
 	private SDIF lib; 
 	
-
-	
 	public SdifWrapper(){
 		// Must change the path of the SDIF framework 
-		System.setProperty("jna.library.path", "..");
+		
 		lib = SDIF.INSTANCE;
 	}
 	
+	public void SdifInit(String filetypes){
+		System.out.println("Initializing SDIF...");
+		lib.SdifGenInit(filetypes);
+	}
+	
+	public void SdifInitCond(){
+		System.out.println("Initializing SDIF...");
+		lib.SdifGenInitCond("");
+	}
+	
+	public void SdifKill(){
+		lib.SdifGenKill();
+	}
+	
 	public SdifFileS sdifOpenFile(String filename, int mode){
-		return lib.SdifFOpen(filename,mode);
+		SdifFileS retour = null;
+		retour = lib.SdifFOpen(filename,mode);
+		System.out.println(retour);
+		return retour;
 	}
 	
 	public void sdifCloseFile(SdifFileS file){
