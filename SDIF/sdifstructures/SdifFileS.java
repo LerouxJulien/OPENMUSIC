@@ -1,10 +1,10 @@
 package sdifstructures;
-import com.ochafik.lang.jnaerator.runtime.NativeSize;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
 import java.util.Arrays;
 import java.util.List;
-import sdifstructures.SdifStructuresLibrary.FILE;
+
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 /**
  * DOC:<br>
  * THE SDIF File Structure!<br>
@@ -18,7 +18,7 @@ public class SdifFileS extends Structure {
 	 * Name of the file, can be "stdin, stdout, stderr<br>
 	 * C type : char*
 	 */
-	public Pointer Name;
+	public String Name;
 	/**
 	 * eWriteFile or eReadFile or ePredefinedTypes<br>
 	 * C type : SdifFileModeET
@@ -40,67 +40,67 @@ public class SdifFileS extends Structure {
 	 * DataBase of Names Values<br>
 	 * C type : SdifNameValuesLT*
 	 */
-	public sdifstructures.SdifNameValuesLS.ByReference NameValues;
+	public Pointer NameValues;
 	/**
 	 * DataBase of Matrix Types<br>
 	 * C type : SdifHashTableT*
 	 */
-	public sdifstructures.SdifHashTableS.ByReference MatrixTypesTable;
+	public Pointer MatrixTypesTable;
 	/**
 	 * DataBase of Frame Types<br>
 	 * C type : SdifHashTableT*
 	 */
-	public sdifstructures.SdifHashTableS.ByReference FrameTypesTable;
+	public Pointer FrameTypesTable;
 	/**
 	 * SdifHashTableT     *StreamIDsTable;    DataBase of Stream IDs<br>
 	 * DataBase of Stream IDs<br>
 	 * C type : SdifStreamIDTableT*
 	 */
-	public sdifstructures.SdifStreamIDTableS.ByReference StreamIDsTable;
+	public Pointer StreamIDsTable;
 	/**
 	 * List of (Time, Position in file)<br>
 	 * C type : SdifTimePositionLT*
 	 */
-	public sdifstructures.SdifTimePositionLS.ByReference TimePositions;
+	public Pointer TimePositions;
 	/**
 	 * default selection parsed from Name<br>
 	 * C type : SdifSelectionT*
 	 */
-	public sdifstructures.SdifSelectionT.ByReference Selection;
+	public Pointer Selection;
 	/**
 	 * Stream to read or to write<br>
 	 * C type : FILE*
 	 */
-	public FILE Stream;
+	public Pointer Stream;
 	/** C type : SdifSignature */
 	public int CurrSignature;
 	/**
 	 * Current Frame Header can be NULL<br>
 	 * C type : SdifFrameHeaderT*
 	 */
-	public sdifstructures.SdifFrameHeaderS.ByReference CurrFramH;
+	public Pointer CurrFramH;
 	/**
 	 * Current Matrix Header can be NULL<br>
 	 * C type : SdifMatrixHeaderT*
 	 */
-	public sdifstructures.SdifMatrixHeaderS.ByReference CurrMtrxH;
+	public Pointer CurrMtrxH;
 	/** C type : SdifFrameTypeT* */
-	public sdifstructures.SdifFrameTypeS.ByReference CurrFramT;
+	public Pointer CurrFramT;
 	/** C type : SdifMatrixTypeT* */
-	public sdifstructures.SdifMatrixTypeS.ByReference CurrMtrxT;
+	public Pointer CurrMtrxT;
 	/** C type : SdifFloat8 */
 	public double PrevTime;
 	/** C type : SdifSignatureTabT* */
-	public sdifstructures.SdifSignatureTabS.ByReference MtrxUsed;
+	public Pointer MtrxUsed;
 	/** C type : SdifOneRowT* */
-	public sdifstructures.SdifOneRowS.ByReference CurrOneRow;
+	public Pointer CurrOneRow;
 	/**
 	 * data pointer used by SdifFReadMatrixData, never uses the Header field<br>
 	 * C type : SdifMatrixDataT*
 	 */
-	public sdifstructures.SdifMatrixDataS.ByReference CurrMtrxData;
-	public NativeSize FileSize;
-	public NativeSize ChunkSize;
+	public Pointer CurrMtrxData;
+	public NativeLong FileSize;
+	public NativeLong ChunkSize;
 	/** C type : SdiffPosT */
 	public long CurrFramPos;
 	/** C type : SdiffPosT */
@@ -115,12 +115,12 @@ public class SdifFileS extends Structure {
 	 * Name of the text file corresponding to the sdif file<br>
 	 * C type : char*
 	 */
-	public Pointer TextStreamName;
+	public String TextStreamName;
 	/**
 	 * Stream text<br>
 	 * C type : FILE*
 	 */
-	public FILE TextStream;
+	public Pointer TextStream;
 	/**
 	 * Error count per level of severity<br>
 	 * C type : SdifUInt4[eNumLevels]
@@ -130,7 +130,7 @@ public class SdifFileS extends Structure {
 	 * List of errors or warnings<br>
 	 * C type : SdifErrorLT*
 	 */
-	public sdifstructures.SdifErrorLS.ByReference Errors;
+	public Pointer Errors;
 	/** todo: hash table */
 	public int NbUserData;
 	/** C type : void*[10] */
@@ -141,10 +141,5 @@ public class SdifFileS extends Structure {
 	protected List<? > getFieldOrder() {
 		return Arrays.asList("Name", "Mode", "isSeekable", "FormatVersion", "TypesVersion", "NameValues", "MatrixTypesTable", "FrameTypesTable", "StreamIDsTable", "TimePositions", "Selection", "Stream", "CurrSignature", "CurrFramH", "CurrMtrxH", "CurrFramT", "CurrMtrxT", "PrevTime", "MtrxUsed", "CurrOneRow", "CurrMtrxData", "FileSize", "ChunkSize", "CurrFramPos", "StartChunkPos", "Pos", "TypeDefPass", "StreamIDPass", "TextStreamName", "TextStream", "ErrorCount", "Errors", "NbUserData", "UserData");
 	}
-	public static class ByReference extends SdifFileS implements Structure.ByReference {
-		
-	};
-	public static class ByValue extends SdifFileS implements Structure.ByValue {
-		
-	};
+	
 }

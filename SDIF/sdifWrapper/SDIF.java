@@ -13,10 +13,13 @@ public interface SDIF extends Library {
     SDIF INSTANCE = (SDIF)
         Native.loadLibrary("SDIF", SDIF.class);
     	
+    
+    
     	public void SdifGenInit(String typesfile);
     	public void SdifGenInitCond(String typesfile);
     	public void SdifGenKill();
     	public SdifFileS SdifFOpen(String filename, int mode);
+    	public int SdifCheckFileFormat (String filename);
     	public void SdifFClose(SdifFileS file);
     	public SIZE_T SdifToText(SdifFileS file, String outfilename);
     	public int SdifFGetPos(SdifFileS file, SdifTimePositionS pos);
