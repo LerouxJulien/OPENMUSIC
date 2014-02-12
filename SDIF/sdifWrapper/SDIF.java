@@ -1,12 +1,11 @@
 package sdifWrapper;
 
 
-import sdifstructures.SdifFileS;
-import sdifstructures.SdifTimePositionS;
-
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.platform.win32.BaseTSD.SIZE_T;
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.LongByReference;
 
 public interface SDIF extends Library {
 	
@@ -18,11 +17,11 @@ public interface SDIF extends Library {
     	public void SdifGenInit(String typesfile);
     	public void SdifGenInitCond(String typesfile);
     	public void SdifGenKill();
-    	public SdifFileS SdifFOpen(String filename, int mode);
+    	public Pointer SdifFOpen(String filename, int mode);
     	public int SdifCheckFileFormat (String filename);
-    	public void SdifFClose(SdifFileS file);
-    	public SIZE_T SdifToText(SdifFileS file, String outfilename);
-    	public int SdifFGetPos(SdifFileS file, SdifTimePositionS pos);
-		public int SdifFSetPos(SdifFileS file, SdifTimePositionS pos);
-		public int SdifFGetSignature(SdifFileS file, SIZE_T nbcharread);
+    	public void SdifFClose(Pointer file);
+    	public NativeLong SdifToText(Pointer file, String outfilename);
+    	public int SdifFGetPos(Pointer file, LongByReference pos);
+		public int SdifFSetPos(Pointer file, LongByReference pos);
+		public int SdifFGetSignature(Pointer file, NativeLong nbcharread);
 }

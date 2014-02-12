@@ -3,7 +3,10 @@ package sdifWrapper;
 import sdifstructures.SdifFileS;
 import sdifstructures.SdifTimePositionS;
 
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.BaseTSD.SIZE_T;
+import com.sun.jna.ptr.LongByReference;
 
 
 
@@ -37,35 +40,32 @@ public class SdifWrapper {
 		return (lib.SdifCheckFileFormat(filename) != 0);
 	}
 	
-	public SdifFileS sdifOpenFile(String filename, int mode){
-		SdifFileS retour = null;
-		retour = lib.SdifFOpen(filename,mode);
-		System.out.println(retour);
-		return retour;
+	public Pointer sdifOpenFile(String filename, int mode){
+		return lib.SdifFOpen(filename,mode);
 	}
 	
-	public void sdifCloseFile(SdifFileS file){
+	public void sdifCloseFile(Pointer file){
 		lib.SdifFClose(file);
 	}
 	
 	
-	public SIZE_T sdifToText(SdifFileS file, String outfilename){
+	public NativeLong sdifToText(Pointer file, String outfilename){
 		return lib.SdifToText(file, outfilename);
 	}
 	
 	// CFFI ?
-	public int sdifGetPos(SdifFileS file, SdifTimePositionS pos){
-		return lib.SdifFGetPos(file, pos);
+	public int sdifGetPos(Pointer file){
+		return lib.SdifFGetPos(file, new LongByReference());
 	}
 	
 	// CFFI ?
-	public int sdifSetPos(SdifFileS file, SdifTimePositionS pos){
-		return lib.SdifFSetPos(file, pos);
+	public int sdifSetPos(Pointer file, long pos){
+		return lib.SdifFSetPos(file, new LongByReference(pos));
 	}
 	
 	// CFFI ?
-	public int sdifGetSignature(SdifFileS file, SIZE_T nbcharread){
-		return lib.SdifFGetSignature(file, nbcharread);
+	public int sdifGetSignature(Pointer file){
+		return lib.SdifFGetSignature(file, new NativeLong() );
 	}
 	
 

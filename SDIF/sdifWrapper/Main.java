@@ -1,6 +1,6 @@
 package sdifWrapper;
 
-import sdifstructures.SdifFileS;
+import com.sun.jna.Pointer;
 
 public class Main {
 
@@ -12,15 +12,22 @@ public class Main {
 		
 		wrap.sdifInitCond();
 		
-		SdifFileS file = wrap.sdifOpenFile("africa.mrk.sdif", 2);
-		
+		Pointer file = wrap.sdifOpenFile("africa.mrk.sdif", 2);
+		System.out.println(file);
 		System.out.println(wrap.sdifCheckFile("africa.mrk.sdif"));
 		
 		wrap.sdifToText(file, "bidule.sdif");
 		
+		System.out.println(wrap.sdifGetPos(file));
+		//wrap.sdifSetPos(file, 2);
+		
+		System.out.println(wrap.sdifGetPos(file));
+		
+		System.out.println(wrap.sdifGetSignature(file));
 		wrap.sdifCloseFile(file);
 		
 		wrap.sdifKill();
+		
 	}
 
 }
