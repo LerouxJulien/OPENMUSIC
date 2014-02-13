@@ -4,6 +4,7 @@ import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
+import com.sun.jna.ptr.NativeLongByReference;
 
 
 
@@ -52,17 +53,19 @@ public class SdifWrapper {
 	
 	// CFFI ?
 	public int sdifGetPos(Pointer file){
-		return lib.SdifFGetPos(file, new IntByReference());
+		IntByReference b = new IntByReference();
+		lib.SdifFGetPos(file, b);
+		return b.getValue();	
 	}
 	
 	// CFFI ?
-	public int sdifSetPos(Pointer file, int pos){
-		return lib.SdifFSetPos(file, new IntByReference(pos));
+	public boolean sdifSetPos(Pointer file, int pos){
+		return lib.SdifFSetPos(file, new IntByReference(pos)) == 0 ;
 	}
 	
 	// CFFI ?
 	public int sdifGetSignature(Pointer file){
-		return lib.SdifFGetSignature(file, new NativeLong() );
+		return lib.SdifFGetSignature(file, new NativeLongByReference() );
 	}
 	
 

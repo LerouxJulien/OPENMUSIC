@@ -8,6 +8,7 @@ import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
+import com.sun.jna.ptr.NativeLongByReference;
 
 public interface SDIF extends Library {
 	
@@ -25,5 +26,5 @@ public interface SDIF extends Library {
     	public NativeLong SdifToText(Pointer file, String outfilename);
     	public int SdifFGetPos(Pointer file, IntByReference pos);
 		public int SdifFSetPos(Pointer file, IntByReference pos);
-		public int SdifFGetSignature(Pointer file, NativeLong nbcharread);
+		public int SdifFGetSignature(Pointer file, NativeLongByReference nbcharread);
 }
