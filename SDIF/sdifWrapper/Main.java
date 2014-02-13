@@ -10,20 +10,24 @@ public class Main {
 		SdifWrapper wrap = new SdifWrapper();
 		wrap.sdifInit("SdifTypes.STYP");
 		
-		wrap.sdifInitCond();
+		//wrap.sdifInitCond();
 		
 		Pointer file = wrap.sdifOpenFile("africa.mrk.sdif", 2);
-		System.out.println(file);
-		System.out.println(wrap.sdifCheckFile("africa.mrk.sdif"));
+		System.out.println("The file is at : "+file);
+		System.out.println("Is the file a SDIF file ? "+wrap.sdifCheckFile("africa.mrk.sdif"));
 		
 		wrap.sdifToText(file, "bidule.sdif");
 		
-		System.out.println(wrap.sdifGetPos(file));
-		//wrap.sdifSetPos(file, 2);
+		System.out.println("GetPos = "+wrap.sdifGetPos(file));
 		
-		System.out.println(wrap.sdifGetPos(file));
 		
-		System.out.println(wrap.sdifGetSignature(file));
+		// Bug ...
+		System.out.println("SetPos = "+wrap.sdifSetPos(file, 32));
+		
+		System.out.println("GetPos = "+wrap.sdifGetPos(file));
+		
+		System.out.println("GetSignature = "+wrap.sdifGetSignature(file));
+		
 		wrap.sdifCloseFile(file);
 		
 		wrap.sdifKill();

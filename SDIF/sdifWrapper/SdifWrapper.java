@@ -1,11 +1,8 @@
 package sdifWrapper;
 
-import sdifstructures.SdifFileS;
-import sdifstructures.SdifTimePositionS;
-
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.BaseTSD.SIZE_T;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
 
 
@@ -55,12 +52,12 @@ public class SdifWrapper {
 	
 	// CFFI ?
 	public int sdifGetPos(Pointer file){
-		return lib.SdifFGetPos(file, new LongByReference());
+		return lib.SdifFGetPos(file, new IntByReference());
 	}
 	
 	// CFFI ?
-	public int sdifSetPos(Pointer file, long pos){
-		return lib.SdifFSetPos(file, new LongByReference(pos));
+	public int sdifSetPos(Pointer file, int pos){
+		return lib.SdifFSetPos(file, new IntByReference(pos));
 	}
 	
 	// CFFI ?
